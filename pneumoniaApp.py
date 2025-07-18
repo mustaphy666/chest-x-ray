@@ -49,22 +49,30 @@ if uploaded_file is not None:
     if st.button('dectect',type='primary'):
         img = img_transforms(img)
         img = torch.unsqueeze(img, 0)
-        filter_model = filter_model()
-        with torch.no_grad():
-            filter_output= filter_model(img)
-            fil_prediction = torch.argmax(filter_output, dim=1).item()
-            if fil_prediction == 1:
-                st.warning("This is not a valid chest X-ray image. Please upload a valid chest image.")
-            else:
-                pneumonia_model = pneumonia_model()
-                with torch.no_grad():
-                    pneumonia_output = pneumonia_model(img)
-                    prediction = torch.argmax(pneumonia_output, dim=1).item()
-                    labels = ['Normal', 'Pneumonia']   
-                    if labels[prediction]=='Normal':  
-                        st.success('This patient does not have pneumonia')
-                    else:
-                         st.warning('This patient has pneumonia')
+        try:
+            filter_model = filter_model()
+            with torch.no_grad():
+                filter_output= filter_model(img)
+                fil_prediction = torch.argmax(filter_output, dim=1).item()
+                if fil_prediction == 1:
+                    st.warning("This is not a valid chest X-ray image. Please upload a valid chest image.")
+        except Exception as e:
+            st.error(f"Error in filter model: {e}")
+        
+        try:
+                if fil_prediction == 0:
+                    st.success("This is a valid chest X-ray image. Proceeding with pneumonia detection.")
+                    pneumonia_model = pneumonia_model()
+                    with torch.no_grad():
+                        pneumonia_output = pneumonia_model(img)
+                        prediction = torch.argmax(pneumonia_output, dim=1).item()
+                        labels = ['Normal', 'Pneumonia']   
+                        if labels[prediction]=='Normal':  
+                            st.success('This patient does not have pneumonia')
+                        else:
+                            st.warning('This patient has pneumonia')
+        except Exception as e:
+                st.error(f"Error in pneumonia model: {e}")
 
 else:
     st.subheader("Please upload a chest X-ray image to make a prediction.")
