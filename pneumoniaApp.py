@@ -1,13 +1,3 @@
-import sys
-
-if 'torch' in sys.modules:
-    import torch
-    import types
-    if isinstance(torch.classes, types.ModuleType):
-        try:
-            del torch.classes.__path__
-        except AttributeError:
-            pass
 import torch
 import streamlit as st  
 import torch.nn as nn
