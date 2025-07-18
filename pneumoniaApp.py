@@ -71,7 +71,7 @@ if uploaded_file is not None:
         
         try:
                 if fil_prediction == 0:
-                    st.success("This is a valid chest X-ray image. Proceeding with pneumonia detection.")
+                    st.write("This is a valid chest X-ray image. Proceeding with pneumonia detection.")
                     pneumonia_model = pneumonia_model()
                     with torch.no_grad():
                         pneumonia_output = pneumonia_model(img)
