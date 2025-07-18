@@ -1,13 +1,9 @@
-import sys
-
-if 'torch' in sys.modules:
-    import torch
-    import types
-    if isinstance(torch.classes, types.ModuleType):
-        try:
-            del torch.classes.__path__
-        except AttributeError:
-            pass
+import os
+import asyncio
+import streamlit.runtime.scriptrunner as scriptrunner
+if not scriptrunner.is_running_in_streamlit():
+    policy=asyncio.WindowsProactorEventLoopPolicy() if os.name == 'nt' else asyncio.DefaultEventLoopPolicy()
+    asyncio.set_event_loop_policy(policy)
 import torch
 import streamlit as st  
 import torch.nn as nn
