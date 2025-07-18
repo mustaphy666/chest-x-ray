@@ -1,7 +1,7 @@
 import os
 import asyncio
 import streamlit.runtime.scriptrunner as scriptrunner
-if not scriptrunner.is_running_in_streamlit():
+if not hasattr (scriptrunner,'is_running_in_streamlit') or not scriptrunner.is_running_in_streamlit():
     policy=asyncio.WindowsProactorEventLoopPolicy() if os.name == 'nt' else asyncio.DefaultEventLoopPolicy()
     asyncio.set_event_loop_policy(policy)
 import torch
