@@ -1,10 +1,3 @@
-import os
-import asyncio
-import streamlit.runtime.scriptrunner as scriptrunner
-if not hasattr (scriptrunner,'is_running_in_streamlit') or not scriptrunner.is_running_in_streamlit():
-    policy=asyncio.WindowsProactorEventLoopPolicy() if os.name == 'nt' else asyncio.DefaultEventLoopPolicy()
-    asyncio.set_event_loop_policy(policy)
-import torch
 import streamlit as st  
 import torch.nn as nn
 import torch.optim as optim
@@ -13,6 +6,11 @@ import torch.nn.functional as F
 import torchvision.models as models
 from torchvision import transforms
 from PIL import Image
+import asyncio
+try:
+     asyncio.get_event_loop()
+except RuntimeError:
+        asyncio.set_event_loop(asyncio.new_event_loop())
 st.set_page_config(page_title="Pneumonia Detection", page_icon=":guardsman:", layout="wide")
 st.title("Pneumonia Detection using Transfer Learning")
 st.subheader("This application uses a pre-trained model to detect pneumonia in chest X-ray images.")
